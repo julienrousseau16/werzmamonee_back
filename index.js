@@ -21,6 +21,17 @@ app.get('/expense', (req, res) => {
   })
 })
 
+app.put('/expense/:id', (req, res) => {
+  const formData = req.body
+  const { id } = req.params
+  connection.query('UPDATE expense SET ? WHERE id = ?', [formData, id], (err, results) => {
+    if (err) {
+      res.status(500).send('Error while changing user data')
+    }
+    res.status(200)
+  })
+})
+
 app.get('/admin', (req, res) => {
   connection.query('SELECT * FROM user WHERE id = 1', (err, results) => {
     if (err) {
