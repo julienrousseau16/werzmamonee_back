@@ -11,8 +11,15 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cors())
 
 
-app.get('/expense', (req, res) => {
-  connection.query('SELECT * FROM expense', (err, results) => {
+app.get('/expenses', (req, res) => {
+  const id = req.query.id
+  let sql = 'SELECT * FROM expense'
+  const sqlValues = []
+  if (id) {
+    sql += ' WHERE id = ?';
+    sqlValues.push(id);
+  }
+  connection.query(sql, sqlValues, (err, results) => {
     if (err) {
       console.log(err)
       res.status(500).send('Error while getting expenses')
@@ -21,7 +28,7 @@ app.get('/expense', (req, res) => {
   })
 })
 
-app.put('/expense/:id', (req, res) => {
+app.put('/expenses/:id', (req, res) => {
   const formData = req.body
   const { id } = req.params
   connection.query('UPDATE expense SET ? WHERE id = ?', [formData, id], (err, results) => {
@@ -52,7 +59,6 @@ app.put('/admin', (req, res) => {
       if (err) {
         throw new Error('Oopsy')
       }
-      console.log(update)
       res.json(update)
     })
   })
