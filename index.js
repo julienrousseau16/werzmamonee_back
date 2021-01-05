@@ -28,6 +28,24 @@ app.get('/expenses', (req, res) => {
   })
 })
 
+app.post('/expenses', (req, res) => {
+  const formData = req.body
+  connection.query('INSERT INTO expense SET ?', formData, (err, result) => {
+    if (err) {
+      console.log(err)
+      res.status(500).send('Error while adding a new expense')
+    }
+    connection.query('SELECT * FROM expense WHERE id = ?', result.insertId, (err, update) => {
+      if (err) {
+        console.log(err)
+        res.status(500).send('Error sending the update')
+      }
+      res.status(201).json(update)
+    })
+
+  })
+})
+
 app.put('/expenses/:id', (req, res) => {
   const formData = req.body
   const { id } = req.params
