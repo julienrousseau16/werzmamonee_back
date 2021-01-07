@@ -48,12 +48,18 @@ app.post('/expenses', (req, res) => {
 
 app.put('/expenses/:id', (req, res) => {
   const formData = req.body
-  const { id } = req.params
-  connection.query('UPDATE expense SET ? WHERE id = ?', [formData, id], (err, results) => {
+  const id = parseInt(req.params.id)
+  connection.query('UPDATE expense SET ? WHERE id = ?', [formData, id], (err, result) => {
     if (err) {
       res.status(500).send('Error while changing user data')
     }
-    res.status(200)
+    connection.query('SELECT * FROM expense WHERE id = ?', id, (err, update) => {
+      if (err) {
+        console.log(err)
+        res.status(200).send('Error while getting expense update')
+      }
+      res.status(200).json(update)
+    })
   })
 })
 
