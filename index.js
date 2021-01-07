@@ -63,6 +63,17 @@ app.put('/expenses/:id', (req, res) => {
   })
 })
 
+app.delete('/expenses/:id', (req, res) => {
+  const id = req.params.id
+  connection.query('DELETE FROM expense WHERE id = ?', id, (err, result) => {
+    if (err) {
+      console.log(err)
+      res.status(500).send('Error while deleting an expense')
+    }
+    res.status(200).json(result)
+  })
+})
+
 app.get('/admin', (req, res) => {
   connection.query('SELECT * FROM user WHERE id = 1', (err, results) => {
     if (err) {
