@@ -9,6 +9,6 @@ const dbSettings = typeof process.env.CLEARDB_DATABASE_URL === 'string' ?
     database: process.env.DB_NAME
   }
 
-const connection = mysql.createConnection(dbSettings)
+const connection = mysql.createPool(dbSettings)
 
 module.exports = connection
